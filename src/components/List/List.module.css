@@ -1,0 +1,66 @@
+.formInput{
+    padding: 1rem;
+    font-family: Inter,sans-serif;
+    font-weight: 400;
+    font-style: italic;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.listGroup{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.listItem{
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    gap: 0.75rem;
+    box-shadow: inset -1px 0px 0px #F5B102;
+}
+
+.listItem:nth-child(odd){
+    background: #FFFAED;
+}
+.listItem:nth-child(even){
+    background: #F5F5F5;
+}
+
+.checkboxInput{
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 1px solid #C7CBCD;
+    border-radius: 2px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.checkedCheckbox{
+    background-color: #FFC42C;
+}
+.hidden{
+    display: none;
+}
+
+.listItemTitle{
+    font-family: Inter,sans-serif;
+    font-weight: 400;
+    color: #202C38;
+    flex: 1;
+}
+.checkedTitle{
+    text-decoration: line-through;
+}
+
+.deleteButton{
+    width: 2.75rem;
+    height: 1.25rem;
+    font-family: Inter,sans-serif;
+    font-weight: 600;
+    color: #E03600;
+    border: none;
+    background-color: inherit;
+}
