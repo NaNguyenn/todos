@@ -5,4 +5,5 @@ main{
     width: 50%;
     max-width: 600px;
     margin: 0 auto;
+    font-family: Inter,sans-serif;
 }

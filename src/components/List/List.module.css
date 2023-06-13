@@ -1,6 +1,5 @@
 .formInput{
     padding: 1rem;
-    font-family: Inter,sans-serif;
     font-weight: 400;
     font-style: italic;
     width: 100%;
@@ -46,7 +45,6 @@
 }
 
 .listItemTitle{
-    font-family: Inter,sans-serif;
     font-weight: 400;
     color: #202C38;
     flex: 1;
@@ -58,7 +56,6 @@
 .deleteButton{
     width: 2.75rem;
     height: 1.25rem;
-    font-family: Inter,sans-serif;
     font-weight: 600;
     color: #E03600;
     border: none;
@@ -67,6 +64,10 @@
 
 .errorMessage{
     color: red;
-    font-family: Inter,sans-serif;
     text-align: center;
+}
+
+.loadingMessage{
+    text-align: center;
+    font-size: large;
 }

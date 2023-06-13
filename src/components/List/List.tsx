@@ -16,7 +16,8 @@ const List = () => {
   const [taskError, setTaskError] = useState(false);
 
   // Get all tasks and functions from hook
-  const { tasks, taskHookError, addTask, updateTask, deleteTask } = useTasks();
+  const { tasks, loading, taskHookError, addTask, updateTask, deleteTask } =
+    useTasks();
 
   // Get the highest order of current tasks
   const currentMaxOrder = tasks.reduce(
@@ -75,6 +76,10 @@ const List = () => {
       setTaskError(true);
     }
   };
+
+  if (loading) {
+    return <p className={styles.loadingMessage}>Loading...</p>;
+  }
 
   return (
     <>

@@ -3,7 +3,8 @@ import taskService, { Task } from "../services/task-service";
 
 const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [taskHookError, setTaskHookError] = useState<string | null>(null);
+  const [taskHookError, setTaskHookError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchTasks();
@@ -14,9 +15,11 @@ const useTasks = () => {
     try {
       const response = await taskService.getAll<Task>();
       setTasks(response.data);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching tasks:", error);
-      setTaskHookError("An error occurred. Please press F5 refresh the page.");
+      setTaskHookError(true);
+      setLoading(false);
     }
   };
 
@@ -27,11 +30,10 @@ const useTasks = () => {
 
     try {
       await taskService.add(newTask);
-      // Fetch updated tasks from the API
       fetchTasks();
     } catch (error) {
       console.error("Error adding task:", error);
-      setTaskHookError("An error occurred. Please press F5 refresh the page.");
+      setTaskHookError(true);
     }
   };
 
@@ -46,28 +48,26 @@ const useTasks = () => {
       await taskService.update(updatedTask);
     } catch (error) {
       console.error("Error updating task:", error);
-      setTaskHookError("An error occurred. Please press F5 refresh the page.");
+      setTaskHookError(true);
     }
   };
 
   // Handle task delete
   const deleteTask = async (task: Task) => {
-    // Update tasks state optimistically
+    // Update tasks state instantly
     setTasks((prevTasks) =>
       prevTasks.filter((prevTask) => prevTask.id !== task.id)
     );
 
     try {
       await taskService.delete(task);
-      // Fetch updated tasks from the API
-      fetchTasks();
     } catch (error) {
       console.error("Error deleting task:", error);
-      setTaskHookError("An error occurred. Please press F5 refresh the page.");
+      setTaskHookError(true);
     }
   };
 
-  return { tasks, taskHookError, addTask, updateTask, deleteTask };
+  return { tasks, taskHookError, loading, addTask, updateTask, deleteTask };
 };
 
 export default useTasks;
