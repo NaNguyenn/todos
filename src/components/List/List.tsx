@@ -1,79 +1,74 @@
 import { useState } from "react";
 import styles from "./List.module.css";
 import { ReactComponent as CheckboxIcon } from "../../assets/checkbox-icon.svg";
-import { Task } from "../../services/task-service";
-import useTasks from "../../hooks/useTasks";
+import { Todo } from "../../services/todo-service";
+import useTodos from "../../hooks/useTodos";
 
 const List = () => {
-  // Initialize new task
-  const [newTask, setNewTask] = useState({
+  // Initialize new todo
+  const [newTodo, setNewTodo] = useState({
     title: "",
-    order: 1,
-    completed: false,
   });
 
   // Initialize error
-  const [taskError, setTaskError] = useState(false);
+  const [todoError, setTodoError] = useState(false);
 
-  // Get all tasks and functions from hook
-  const { tasks, loading, taskHookError, addTask, updateTask, deleteTask } =
-    useTasks();
+  // Get all todos and functions from hook
+  const {
+    todos,
+    loading,
+    todoHookError,
+    handleCreateTodo,
+    handleUpdateTodo,
+    handleDeleteTodo,
+  } = useTodos();
 
-  // Get the highest order of current tasks
-  const currentMaxOrder = tasks.reduce(
-    (max, task) => Math.max(max, task.order),
-    0
-  );
-
-  //Handle add task form input
+  //Handle add todo form input
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputTask = {
+    const inputTodo = {
       title: event.target.value,
-      order: currentMaxOrder + 1,
-      completed: false,
+      isActive: true,
     };
-    setNewTask(inputTask);
+    setNewTodo(inputTodo);
   };
 
-  // Handle add task form submit
+  // Handle add todo form submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      await addTask(newTask);
+      handleCreateTodo(newTodo);
 
-      // Reset new task
-      setNewTask({
+      // Reset new todo
+      setNewTodo({
         title: "",
-        order: currentMaxOrder + 2, //Keep new task at highest order
-        completed: false,
       });
     } catch (error) {
-      // console.error("Error adding task:", error);
-      setTaskError(true);
+      console.error("Error adding todo:", error);
+      setTodoError(true);
     }
   };
 
-  // Handle task completion check
-  const handleCheckbox = async (task: Task) => {
-    // Switch completed state of checked task
-    const updatedTask = { ...task, completed: !task.completed };
+  // Handle todo completion check
+  const handleCheckbox = async (todo: Todo) => {
+    // Switch completed state of checked todo
+    const updatedTodo = { ...todo, isActive: !todo.isActive };
 
     try {
-      await updateTask(updatedTask);
+      handleUpdateTodo(updatedTodo);
     } catch (error) {
-      // console.error("Error updating task:", error);
-      setTaskError(true);
+      // console.error("Error updating todo:", error);
+      setTodoError(true);
     }
   };
 
-  // Handle task deleting
-  const handleDelete = async (task: Task) => {
+  // Handle todo deleting
+  const handleDelete = async (todo: Todo) => {
     try {
-      await deleteTask(task);
+      handleDeleteTodo(todo);
     } catch (error) {
-      // console.error("Error deleting task:", error);
-      setTaskError(true);
+      // console.error("Error deleting todo:", error);
+      setTodoError(true);
     }
   };
 
@@ -84,17 +79,17 @@ const List = () => {
   return (
     <>
       {/* Display error if necessary */}
-      {(taskError || taskHookError) && (
+      {(todoError || todoHookError) && (
         <p className={styles.errorMessage}>
           An error occured. Please press F5 to refresh
         </p>
       )}
-      {/* Form to add new task */}
+      {/* Form to add new todo */}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          name="taskTitle"
-          value={newTask.title}
+          name="todoTitle"
+          value={newTodo.title}
           onChange={handleInputChange}
           className={styles.formInput}
           placeholder="What needs to be done?"
@@ -104,38 +99,36 @@ const List = () => {
         <button type="submit" hidden></button>
       </form>
 
-      {/* List of tasks */}
+      {/* List of todos */}
       <ul className={styles.listGroup}>
-        {tasks
-          .sort((a, b) => b.order - a.order)
-          .map((task) => (
-            <li className={styles.listItem} key={task.id}>
-              {/* Checkbox for task completion */}
-              <div
-                className={`${styles.checkboxInput} ${
-                  task.completed ? styles.checkedCheckbox : ""
-                }`}
-                onClick={() => handleCheckbox(task)}
-              >
-                <CheckboxIcon className={task.completed ? "" : styles.hidden} />
-              </div>
-              {/* Task title */}
-              <span
-                className={`${styles.listItemTitle} ${
-                  task.completed ? styles.checkedTitle : ""
-                }`}
-              >
-                {task.title}
-              </span>
-              {/* Delete task button */}
-              <button
-                className={styles.deleteButton}
-                onClick={() => handleDelete(task)}
-              >
-                Delete
-              </button>
-            </li>
-          ))}
+        {todos.map((todo) => (
+          <li className={styles.listItem} key={todo.id}>
+            {/* Checkbox for todo completion */}
+            <div
+              className={`${styles.checkboxInput} ${
+                !todo.isActive ? styles.checkedCheckbox : ""
+              }`}
+              onClick={() => handleCheckbox(todo)}
+            >
+              <CheckboxIcon className={!todo.isActive ? "" : styles.hidden} />
+            </div>
+            {/* Todo title */}
+            <span
+              className={`${styles.listItemTitle} ${
+                !todo.isActive ? styles.checkedTitle : ""
+              }`}
+            >
+              {todo.title}
+            </span>
+            {/* Delete todo button */}
+            <button
+              className={styles.deleteButton}
+              onClick={() => handleDelete(todo)}
+            >
+              Delete
+            </button>
+          </li>
+        ))}
       </ul>
     </>
   );

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import taskService, { Task } from "../services/task-service";
+import taskService, { Task } from "../services/todo-service";
 
 const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
